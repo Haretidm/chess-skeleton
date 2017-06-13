@@ -1,6 +1,7 @@
 package chess.pieces;
 
 import chess.Player;
+import chess.Position;
 
 /**
  * The 'Rook' class
@@ -15,4 +16,9 @@ public class Rook extends Piece {
     protected char getIdentifyingCharacter() {
         return 'r';
     }
+    
+	@Override
+	public boolean isValidMove(Position from, Position to) {
+		return couldMoveVerticallyAndHorizontally(from, to);
+	}
 }

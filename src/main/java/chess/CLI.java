@@ -3,6 +3,7 @@ package chess;
 import chess.pieces.Piece;
 
 import java.io.*;
+import java.util.Set;
 
 /**
  * This class provides the basic CLI interface to the Chess game.
@@ -48,7 +49,12 @@ public class CLI {
 
         while (true) {
             showBoard();
-            writeOutput(gameState.getCurrentPlayer() + "'s Move");
+            if (gameState.isKingAlive()) {
+            	writeOutput(gameState.getCurrentPlayer() + "'s Move");
+            } else {
+            	final Player winner = gameState.getCurrentPlayer() == Player.White ? Player.Black : Player.White;
+            	writeOutput(String.format("The game is over.  Congrats to %s.", winner));
+            }
 
             String input = getInput();
             if (input == null) {
@@ -64,9 +70,24 @@ public class CLI {
                 } else if (input.equals("board")) {
                     writeOutput("Current Game:");
                 } else if (input.equals("list")) {
-                    writeOutput("====> List Is Not Implemented (yet) <====");
+                   showMoves();
                 } else if (input.startsWith("move")) {
-                    writeOutput("====> Move Is Not Implemented (yet) <====");
+                	final String[] cmd = input.split("\\s+");
+                	if (cmd.length != 3) {
+                		 writeOutput("I didn't understand that.  Type 'help' for a list of commands.");
+                	} else {
+                		try {
+                			final Position from = new Position(cmd[1]);
+                			final Position to = new Position(cmd[2]);
+                			if (from.isValidPositionOnTheBoard() && to.isValidPositionOnTheBoard()){
+                				checkAndMove(new Move(from, to));
+                			} else {
+                				 writeOutput("I didn't understand that.  Type 'help' for a list of commands.");
+                			}
+                		}catch (Exception e) {
+                			 writeOutput("I didn't understand that.  Type 'help' for a list of commands.");
+                		}
+                	}
                 } else {
                     writeOutput("I didn't understand that.  Type 'help' for a list of commands.");
                 }
@@ -81,6 +102,35 @@ public class CLI {
 
     private void showBoard() {
         writeOutput(getBoardAsString());
+    }
+    
+    private void showMoves() {
+    	writeOutput(gameState.getCurrentPlayer() + "'s Possible Moves:");
+    	final Set<Move> moves = gameState.getMovesForPlayer(gameState.getCurrentPlayer());
+    	for (Move move : moves) {
+    		  writeOutput(move.toString());
+		}
+    }
+    
+    
+    private void checkAndMove(Move move) throws Exception {
+    	final Set<Move> moves = gameState.getMovesForPlayer(gameState.getCurrentPlayer());
+    	if (moves.contains(move)) {
+    		final Piece piece = gameState.removePiece(move.getFrom());
+    		gameState.placePiece(piece, move.getTo());
+    		changeCurrentPlayer();
+    	} else {
+    		throw new UnsupportedOperationException("Invalid move");
+    	}
+    	
+    }
+    
+    private void changeCurrentPlayer(){
+    	if (gameState.getCurrentPlayer() == Player.White) {
+    		gameState.setCurrentPlayer(Player.Black);
+    	} else {
+    		gameState.setCurrentPlayer(Player.White);
+    	}
     }
 
     private void showCommands() {

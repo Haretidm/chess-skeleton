@@ -3,8 +3,12 @@ package chess;
 
 import chess.pieces.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Class that represents the current state of the game.  Basically, what pieces are in which positions on the
@@ -31,6 +35,10 @@ public class GameState {
 
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+    
+    public void setCurrentPlayer(final Player player) {
+        this.currentPlayer = player;
     }
 
     /**
@@ -98,7 +106,62 @@ public class GameState {
      * @param piece The piece to place
      * @param position The position
      */
-    private void placePiece(Piece piece, Position position) {
+    void placePiece(Piece piece, Position position) {
         positionToPieceMap.put(position, piece);
     }
+    
+    
+    /**
+     * Get the piece that you want to remove
+     * @param position The position to inquire about.
+     * @return The piece at that position, or null if it does not exist.
+     */
+    public Piece removePiece(Position position) {
+        return positionToPieceMap.remove(position);
+    }
+    
+    /**
+     * Get the all possible moves for player, by scanning board for every Piece 
+     * @param player (White or Black)
+     * @return The piece at that position, or null if it does not exist.
+     */
+	public Set<Move> getMovesForPlayer(Player player) {
+		final Set<Move> moveList = new HashSet<Move>();
+		for (Map.Entry<Position, Piece> entry : positionToPieceMap.entrySet()) {
+			final Position positionFrom = entry.getKey();
+			final Piece piece = entry.getValue();
+
+			if (player == piece.getOwner()) {
+				for (char column = Position.MIN_COLUMN; column <= Position.MAX_COLUMN; column++) {
+					for (int row = Position.MIN_ROW; row <= Position.MAX_ROW; row++) {
+						final Position positionTo = new Position(column, row);
+						final Piece possiblePieceOnPosition = getPieceAt(positionTo);
+						if (possiblePieceOnPosition == null || possiblePieceOnPosition.getOwner() != player) { //can move to free position
+							if (piece instanceof Pawn) {
+								Pawn pawn = (Pawn) piece;
+								pawn.isValidFightMove(positionFrom, positionTo);
+								moveList.add(new Move(positionFrom, positionTo));
+							}																			  
+							if (piece.isValidMove(positionFrom, positionTo)) {
+								moveList.add(new Move(positionFrom, positionTo));
+							}
+						}						
+					}
+				}
+			}
+		}
+		
+		return moveList;
+	}
+	
+	public boolean isKingAlive() {  //Currently as template for checkMate when king is not alive
+		final List<Piece> pieces =	new ArrayList<Piece>(positionToPieceMap.values());
+    	for (Piece piece : pieces) {
+    		if (piece instanceof King && piece.getOwner() == getCurrentPlayer()) {
+    			return true;
+    		}
+		}
+    	return false;
+	}
+    
 }
