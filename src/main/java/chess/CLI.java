@@ -1,5 +1,6 @@
 package chess;
 
+import chess.pieces.Pawn;
 import chess.pieces.Piece;
 
 import java.io.*;
@@ -117,6 +118,9 @@ public class CLI {
     	final Set<Move> moves = gameState.getMovesForPlayer(gameState.getCurrentPlayer());
     	if (moves.contains(move)) {
     		final Piece piece = gameState.removePiece(move.getFrom());
+    		if (piece instanceof Pawn) {
+    			((Pawn) piece).looseFirstLongMoveChanceIfNeeded();
+    		}
     		gameState.placePiece(piece, move.getTo());
     		changeCurrentPlayer();
     	} else {

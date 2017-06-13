@@ -20,8 +20,10 @@ public class Pawn extends Piece {
 
 	@Override
 	public boolean isValidMove(Position from, Position to) {
-		boolean propperDirection = (getOwner() == Player.White) ? (from.getY() < to.getY()) : (to.getY() > from.getY());
+		boolean propperDirection = getProperDirectionForPlayer(from, to);
 		final int dY = (to.getY() - from.getY());
+		
+		if (dY < 0 && (getOwner() == Player.White)) return false;
 		
 		if (isFirstMove) {
 			if (propperDirection) {
@@ -30,15 +32,33 @@ public class Pawn extends Piece {
 				return (dY == -2) || (dY == -1); 
 			}
 		}
-		return propperDirection ? (dY == -1) : (dY == 1);
+		return propperDirection ? (dY == 1) : (dY == -1);
 	}
 	
 	
 	public boolean isValidFightMove(Position from, Position to) {
-		final int dX = Math.abs(to.getX() - from.getX());
-		final int dY = Math.abs(to.getY() - from.getY());
+		final int dX = to.getX() - from.getX();
+		final int dY = to.getY() - from.getY();
 		
-		return (dX ==  1) && (dY == 1);
+		boolean propperDirection = getProperDirectionForPlayer(from, to);
+		
+		if (propperDirection) {
+			return (dX ==  1) && (dY == 1);
+		} else {
+			return (dX ==  -1) && (dY == -1);
+		}
+		
+	}
+	
+	private boolean getProperDirectionForPlayer (Position from, Position to) { //True for White, false for Black
+		boolean direction = (getOwner() == Player.White) ? (from.getY() < to.getY()) : (to.getY() > from.getY());
+		return direction;
+	}
+	
+	public void looseFirstLongMoveChanceIfNeeded(){
+		if (isFirstMove) {
+			isFirstMove = false;
+		}
 	}
 	
 }
