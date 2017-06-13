@@ -21,7 +21,7 @@ public class Pawn extends Piece {
 	@Override
 	public boolean isValidMove(Position from, Position to) {
 		boolean propperDirection = getProperDirectionForPlayer(from, to);
-		final int dY = (to.getY() - from.getY());
+		final int dY = (to.getRow() - from.getRow());
 		
 		if (dY < 0 && (getOwner() == Player.White)) return false;
 		
@@ -37,8 +37,8 @@ public class Pawn extends Piece {
 	
 	
 	public boolean isValidFightMove(Position from, Position to) {
-		final int dX = to.getX() - from.getX();
-		final int dY = to.getY() - from.getY();
+		final int dX = to.getColumn() - from.getColumn();
+		final int dY = to.getRow() - from.getRow();
 		
 		boolean propperDirection = getProperDirectionForPlayer(from, to);
 		
@@ -51,7 +51,7 @@ public class Pawn extends Piece {
 	}
 	
 	private boolean getProperDirectionForPlayer (Position from, Position to) { //True for White, false for Black
-		boolean direction = (getOwner() == Player.White) ? (from.getY() < to.getY()) : (to.getY() > from.getY());
+		boolean direction = (getOwner() == Player.White) ? (from.getRow() < to.getRow()) : (to.getRow() > from.getRow());
 		return direction;
 	}
 	

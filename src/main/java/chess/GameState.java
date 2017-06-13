@@ -135,15 +135,19 @@ public class GameState {
 				for (char column = Position.MIN_COLUMN; column <= Position.MAX_COLUMN; column++) {
 					for (int row = Position.MIN_ROW; row <= Position.MAX_ROW; row++) {
 						final Position positionTo = new Position(column, row);
-						final Piece possiblePieceOnPosition = getPieceAt(positionTo);
-						if (possiblePieceOnPosition == null || possiblePieceOnPosition.getOwner() != player) { //can move to free position
-							if (piece instanceof Pawn) {
-								Pawn pawn = (Pawn) piece;
-								pawn.isValidFightMove(positionFrom, positionTo);
-								moveList.add(new Move(positionFrom, positionTo));
-							}																			  
-							if (piece.isValidMove(positionFrom, positionTo)) {
-								moveList.add(new Move(positionFrom, positionTo));
+						if (!positionFrom.equals(positionTo)) {
+							final Piece possiblePieceOnPosition = getPieceAt(positionTo);
+							if (possiblePieceOnPosition == null || possiblePieceOnPosition.getOwner() != player) { //can move to free position 
+																												   //or position where enemy is paced
+								if (piece instanceof Pawn) {
+									Pawn pawn = (Pawn) piece;
+									pawn.isValidFightMove(positionFrom, positionTo);
+									moveList.add(new Move(positionFrom, positionTo));
+								}
+								final boolean isKnight = (piece instanceof Knight); // knight can jump over sheets
+								if (piece.isValidMove(positionFrom, positionTo) && isBlocked(positionFrom, positionTo, isKnight)) {
+									moveList.add(new Move(positionFrom, positionTo));
+								}
 							}
 						}						
 					}
@@ -153,6 +157,31 @@ public class GameState {
 		
 		return moveList;
 	}
+	
+	public boolean isBlocked(Position positionFrom, Position positionTo, boolean isKnight) {
+		if (!isKnight) {
+			final char xFrom = positionFrom.getColumn();
+			final int yFrom = positionFrom.getRow();
+			final char xTo = positionTo.getColumn();
+			final int yTo = positionTo.getRow();
+			
+			int maxSheetTo = Math.max(Math.abs(xTo - xFrom), Math.abs(yTo - yFrom));
+			
+			int dX = (xFrom < xTo) ? 1 : ((xFrom == xTo) ? 0 : -1);
+			int dY = (yFrom < yTo) ? 1 : ((yFrom == yTo) ? 0 : -1);
+			
+			for (int i = 1; i < maxSheetTo; i++) {
+				char icrementalX = (char) (xFrom +  (i * dX));
+				int icrementalY = yFrom + i * dY;
+				if (getPieceAt(new Position(icrementalX, icrementalY)) != null) {
+					return true;
+				}
+				
+			}
+		}
+		return false;
+	}
+
 	
 	public boolean isKingAlive() {  //Currently as template for checkMate when king is not alive
 		final List<Piece> pieces =	new ArrayList<Piece>(positionToPieceMap.values());

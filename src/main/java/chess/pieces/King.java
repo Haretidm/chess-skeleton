@@ -18,8 +18,8 @@ public class King extends Piece {
 
 	@Override
 	public boolean isValidMove(Position from, Position to) {
-		final int dX = Math.abs(from.getX() - to.getX());
-		final int dY = Math.abs(from.getY() - to.getY());
+		final int dX = Math.abs(from.getColumn() - to.getColumn());
+		final int dY = Math.abs(from.getRow() - to.getRow());
 		return (dX <= 1) && (dY <= 1);
 	}
 }

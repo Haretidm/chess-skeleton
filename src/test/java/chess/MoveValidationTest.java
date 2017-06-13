@@ -82,7 +82,6 @@ public class MoveValidationTest {
 		Pawn pawn = new Pawn(Player.Black);
         assertEquals(true, pawn.isValidMove(new Position("a7"), new Position("a6"))); //1 sheet forward another side
         assertEquals(true, pawn.isValidMove(new Position("a7"), new Position("a5"))); //2 sheet forward another side
-        
         assertEquals(true, pawn.isValidFightMove(new Position("a2"), new Position("b3"))); //Diagonal to kill an enemy forward
     }
 }

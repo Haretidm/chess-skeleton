@@ -1,7 +1,6 @@
 package chess;
 
-import java.util.Arrays;
-import java.util.List;
+
 import java.util.Objects;
 
 /**
@@ -14,11 +13,6 @@ public class Position {
     public static final char MAX_COLUMN = 'h';
     private int row;
     private char column;
-    
-    private static final List<Character> x_axys = Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h');
-    
-    private int x;
-    private int y;
 
     /**
      * Create a new position object
@@ -29,8 +23,6 @@ public class Position {
     public Position(char column, int row) {
         this.row = row;
         this.column = column;
-        this.x = x_axys.indexOf(column);
-        this.y = row - 1;
     }
     
     /**
@@ -48,17 +40,12 @@ public class Position {
     public char getColumn() {
         return column;
     }
-    
-    public int getX() {
-		return x;
-	}
-
-	public int getY() {
-		return y;
-	}
 	
-	public boolean isValidPositionOnTheBoard(){
-		if (row >= MIN_ROW && row <= MAX_ROW && getX() >= 0) {
+	public boolean isValidPositionOnTheBoard() {
+		if (column >= MIN_COLUMN 
+				&& row <= MAX_COLUMN 
+				&& row >= MIN_ROW
+				&& row <= MAX_ROW) {
 			return true;
 		}
 		return false;
@@ -73,18 +60,16 @@ public class Position {
         Position position = (Position) o;
 
         if (column != position.column) return false;
-        if (x != position.x) return false;
       
         //noinspection RedundantIfStatement
         if (row != position.row) return false;
-        if (y != position.y) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-       return  Objects.hash(row, column, x, y);
+       return  Objects.hash(row, column);
     }
 
     @Override

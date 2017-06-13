@@ -31,11 +31,11 @@ public abstract class Piece {
     public abstract boolean isValidMove(Position from, Position to);
     
     protected final boolean coudMoveDiagonally(Position from, Position to) {
-    	return (Math.abs(to.getX() - from.getX()) == Math.abs(to.getY() - from.getY()));
+    	return (Math.abs(to.getColumn() - from.getColumn()) == Math.abs(to.getRow() - from.getRow()));
     }
     
     protected final boolean couldMoveVerticallyAndHorizontally(Position from, Position to) {
-    	return ((from.getX() == to.getX() && from.getY() != to.getY()) ||
-    			(from.getY() == to.getY() && from.getX() != to.getY()));
+    	return ((from.getColumn() == to.getColumn() && from.getRow() != to.getRow()) ||
+    			(from.getRow() == to.getRow() && from.getColumn() != to.getRow()));
     }
 }
