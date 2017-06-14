@@ -43,7 +43,7 @@ public class Position {
 	
 	public boolean isValidPositionOnTheBoard() {
 		if (column >= MIN_COLUMN 
-				&& row <= MAX_COLUMN 
+				&& column <= MAX_COLUMN 
 				&& row >= MIN_ROW
 				&& row <= MAX_ROW) {
 			return true;
