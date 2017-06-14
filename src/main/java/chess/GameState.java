@@ -130,7 +130,6 @@ public class GameState {
 		for (Map.Entry<Position, Piece> entry : positionToPieceMap.entrySet()) {
 			final Position positionFrom = entry.getKey();
 			final Piece piece = entry.getValue();
-
 			if (player == piece.getOwner()) {
 				for (char column = Position.MIN_COLUMN; column <= Position.MAX_COLUMN; column++) {
 					for (int row = Position.MIN_ROW; row <= Position.MAX_ROW; row++) {
@@ -138,14 +137,14 @@ public class GameState {
 						if (!positionFrom.equals(positionTo)) {
 							final Piece possiblePieceOnPosition = getPieceAt(positionTo);
 							if (possiblePieceOnPosition == null || possiblePieceOnPosition.getOwner() != player) { //can move to free position 
-																												   //or position where enemy is paced
+																												   //or position where enemy is placed
 								if (piece instanceof Pawn) {
 									Pawn pawn = (Pawn) piece;
 									pawn.isValidFightMove(positionFrom, positionTo);
 									moveList.add(new Move(positionFrom, positionTo));
 								}
 								final boolean isKnight = (piece instanceof Knight); // knight can jump over sheets
-								if (piece.isValidMove(positionFrom, positionTo) && isBlocked(positionFrom, positionTo, isKnight)) {
+								if (piece.isValidMove(positionFrom, positionTo) && !isBlocked(positionFrom, positionTo, isKnight)) {
 									moveList.add(new Move(positionFrom, positionTo));
 								}
 							}
@@ -157,6 +156,8 @@ public class GameState {
 		
 		return moveList;
 	}
+	
+
 	
 	public boolean isBlocked(Position positionFrom, Position positionTo, boolean isKnight) {
 		if (!isKnight) {

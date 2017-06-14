@@ -9,7 +9,7 @@ import org.junit.Test;
 import chess.pieces.Pawn;
 import chess.pieces.Rook;
 
-public class SimpleBlockingCheck {
+public class SimpleBlockingTest {
 
 	private GameState state;
 
@@ -30,14 +30,14 @@ public class SimpleBlockingCheck {
 		final Position rookPosition2 = new Position("h1");
 		state.placePiece(new Rook(Player.White), rookPosition2);
 
-		assertFalse("White Rook is not blocked by pawn", state.isBlocked(rookPosition2, new Position("h1"), false));
+		assertFalse("White Rook is not blocked", state.isBlocked(rookPosition2, new Position("h1"), false));
 		
 		
 		//Check from other side
 		final Position rookPosition3 = new Position("h8");
 		state.placePiece(new Rook(Player.Black), rookPosition2);
 
-		assertFalse("Black Rook is not blocked by pawn", state.isBlocked(rookPosition3, new Position("h1"), false));
+		assertFalse("Black Rook is not blocked", state.isBlocked(rookPosition3, new Position("h1"), false));
 		
 		final Position rookPosition4 = new Position("a8");
 		state.placePiece(new Rook(Player.Black), rookPosition2);

@@ -30,8 +30,7 @@ public class Move {
 			return true;
 		if (!(obj instanceof Move)) return false;
 		Move move = (Move) obj;
-	    return (this.from == (move.from)) &&
-	           (this.to == move.to);
+	    return from.equals(move.from) && to.equals(move.to);
 	}
 
 	@Override

@@ -21,9 +21,14 @@ public class Pawn extends Piece {
 	@Override
 	public boolean isValidMove(Position from, Position to) {
 		boolean propperDirection = getProperDirectionForPlayer(from, to);
+		final int dX = Math.abs(to.getColumn() - from.getColumn());
 		final int dY = (to.getRow() - from.getRow());
 		
-		if (dY < 0 && (getOwner() == Player.White)) return false;
+		if (dX > 0
+				|| ((dY < 0 && (getOwner() == Player.White)) 
+				|| (dY > 0 && (getOwner() == Player.Black)))) {
+			return false;
+		}
 		
 		if (isFirstMove) {
 			if (propperDirection) {

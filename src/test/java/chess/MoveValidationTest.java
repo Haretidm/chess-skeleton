@@ -73,6 +73,10 @@ public class MoveValidationTest {
         assertEquals(true, pawn.isValidFightMove(new Position("a2"), new Position("b3"))); //Diagonal to kill an enemy forward
         assertEquals(false, pawn.isValidFightMove(new Position("b3"), new Position("c2"))); //Diagonal to kill an enemy back not allowed
         
+        
+        assertEquals(false, pawn.isValidMove(new Position("a2"), new Position("b4"))); //Not allowed
+        assertEquals(false, pawn.isValidMove(new Position("a2"), new Position("d4"))); //Not allowed
+        
     
     }
 	
